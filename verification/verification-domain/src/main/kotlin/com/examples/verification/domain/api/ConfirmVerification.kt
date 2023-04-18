@@ -1,9 +1,12 @@
 package com.examples.verification.domain.api
 
-import com.examples.verification.domain.model.Subject
 import com.examples.verification.domain.model.UserInfo
 
-data class CreateVerificationCommand(
-    val subject: Subject,
+data class ConfirmVerificationCommand(
+    val code: Long,
     val userInfo: UserInfo
+)
+
+data class ConfirmVerificationResult(
+    val success: Boolean
 )
