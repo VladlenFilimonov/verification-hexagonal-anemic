@@ -5,6 +5,7 @@ import java.util.UUID
 data class Verification(
     val id: UUID?,
     val confirmed: Boolean?,
+    val expired: Boolean?,
     val code: String?,
     val subject: Subject,
     val userInfo: UserInfo

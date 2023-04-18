@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 
 @Service
-class VerificationFacade(
+class VerificationService(
     private val createVerificationService: CreateVerificationService,
     private val confirmVerificationService: ConfirmVerificationService,
     private val errorEventVerificationPort: ErrorEventVerificationPort

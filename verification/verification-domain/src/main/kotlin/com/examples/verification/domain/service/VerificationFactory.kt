@@ -8,7 +8,7 @@ import reactor.core.publisher.Mono
 @Service
 class VerificationFactory {
     fun buildVerification(cmd: CreateVerificationCommand): Mono<Verification> {
-
+        TODO("not implemented")
     }
 
 }

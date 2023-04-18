@@ -7,9 +7,9 @@ import reactor.core.publisher.Mono
 
 @Service
 class ConfirmVerificationService {
-
     fun confirm(command: ConfirmVerificationCommand): Mono<ConfirmVerificationResult> {
-
+        TODO("Not yet implemented")
     }
+
 
 }
