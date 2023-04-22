@@ -15,8 +15,7 @@ class VerificationExpirationRule(
 ) : BusinessRule<ConfirmVerificationCommand> {
     override fun apply(cmd: ConfirmVerificationCommand): Mono<ConfirmVerificationCommand> {
         return readVerificationPort.read(cmd.id)
-            .doOnNext { verification -> checkForVerificationExpired(verification) }
-            .map { _ -> cmd }
+            .map { verification -> checkForVerificationExpired(verification, cmd) }
             .switchIfEmpty(throwVerificationNotFoundError(cmd))
     }
 
@@ -24,11 +23,18 @@ class VerificationExpirationRule(
         return VERIFICATION_EXPIRATION_RULE.order
     }
 
-    private fun checkForVerificationExpired(verification: Verification) {
-        verification.expired ?: throw VerificationError(
-            "Verification expired with id: ${verification.id}",
-            ErrorCode.VERIFICATION_EXPIRED
-        )
+    private fun checkForVerificationExpired(
+        verification: Verification,
+        cmd: ConfirmVerificationCommand
+    ): ConfirmVerificationCommand {
+
+        if (verification.expired) {
+            throw VerificationError(
+                "Verification expired with id: ${verification.id}",
+                ErrorCode.VERIFICATION_EXPIRED
+            )
+        }
+        return cmd
     }
 
     private fun throwVerificationNotFoundError(cmd: ConfirmVerificationCommand): Mono<out ConfirmVerificationCommand> {
