@@ -4,6 +4,7 @@ import com.examples.verification.domain.api.ConfirmVerificationCommand
 import com.examples.verification.domain.api.CreateVerificationCommand
 import com.examples.verification.domain.model.Subject
 import com.examples.verification.domain.model.Verification
+import com.examples.verification.domain.model.VerificationAttempts
 import java.util.UUID
 import reactor.core.publisher.Mono
 
@@ -23,4 +24,8 @@ interface CreateEventVerificationPort {
 interface ErrorEventVerificationPort {
     fun send(error: Throwable, command: ConfirmVerificationCommand): Throwable
     fun send(error: Throwable, command: CreateVerificationCommand): Throwable
+}
+
+interface ReadVerificationAttemptsPort {
+    fun read(verificationId: UUID): Mono<VerificationAttempts>
 }

@@ -1,4 +1,4 @@
-package com.examples.verification.domain.service.rules
+package com.examples.verification.domain.service.rules.confirm
 
 import com.examples.verification.domain.api.ConfirmVerificationCommand
 import com.examples.verification.domain.error.ErrorCode
@@ -11,8 +11,8 @@ import reactor.core.publisher.Mono
 @Rule
 class UserInfoMatchingRule(
     private val readVerificationPort: ReadVerificationPort
-) : BusinessRule<ConfirmVerificationCommand> {
-    override fun apply(cmd: ConfirmVerificationCommand): Mono<ConfirmVerificationCommand> {
+) {
+    fun apply(cmd: ConfirmVerificationCommand): Mono<ConfirmVerificationCommand> {
         return readVerificationPort.read(cmd.id)
             .map { verification -> matchUserInfo(verification, cmd) }
             .switchIfEmpty(Mono.error(VerificationError("Verification not found", ErrorCode.VERIFICATION_NOT_FOUND)))
@@ -26,10 +26,6 @@ class UserInfoMatchingRule(
             throw VerificationError("IP address doesn't match", ErrorCode.IP_ADDRESS_NOT_MATCH)
         }
         return cmd
-    }
-
-    override fun getOrder(): Int {
-        return BusinessRuleOrder.USER_INFO_MATCHING_RULE.order
     }
 
 }
