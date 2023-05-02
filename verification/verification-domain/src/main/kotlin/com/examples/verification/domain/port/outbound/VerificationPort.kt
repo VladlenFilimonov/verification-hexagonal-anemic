@@ -29,3 +29,7 @@ interface ErrorEventVerificationPort {
 interface ReadVerificationAttemptsPort {
     fun read(verificationId: UUID): Mono<VerificationAttempts>
 }
+
+interface AcquireDistributedLockPort {
+    fun acquire(cmd: ConfirmVerificationCommand): Mono<ConfirmVerificationCommand>
+}

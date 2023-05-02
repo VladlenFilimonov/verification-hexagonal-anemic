@@ -2,6 +2,7 @@ package com.examples.verification.domain.service.rules
 
 import com.examples.verification.domain.api.ConfirmVerificationCommand
 import com.examples.verification.domain.api.CreateVerificationCommand
+import com.examples.verification.domain.service.rules.confirm.IdempotentConfirmationRule
 import com.examples.verification.domain.service.rules.confirm.MaxAttemptsConfirmationRule
 import com.examples.verification.domain.service.rules.confirm.UserInfoMatchingRule
 import com.examples.verification.domain.service.rules.confirm.VerificationExpirationRule
@@ -14,14 +15,16 @@ class VerificationBusinessRulesService(
     private val duplicationVerificationRule: DuplicationVerificationRule,
     private val userInfoMatchingRule: UserInfoMatchingRule,
     private val verificationExpirationRule: VerificationExpirationRule,
-    private val maxAttemptsConfirmationRule: MaxAttemptsConfirmationRule
+    private val maxAttemptsConfirmationRule: MaxAttemptsConfirmationRule,
+    private val idempotentConfirmationRule: IdempotentConfirmationRule
 ) {
     fun applyRules(cmd: CreateVerificationCommand): Mono<CreateVerificationCommand> {
         return duplicationVerificationRule.apply(cmd)
     }
 
     fun applyRules(cmd: ConfirmVerificationCommand): Mono<ConfirmVerificationCommand> {
-        return userInfoMatchingRule.apply(cmd)
+        return idempotentConfirmationRule.apply(cmd)
+            .flatMap { command -> userInfoMatchingRule.apply(command) }
             .flatMap { command -> verificationExpirationRule.apply(command) }
             .flatMap { command -> maxAttemptsConfirmationRule.apply(command) }
     }
