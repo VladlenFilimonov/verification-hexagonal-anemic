@@ -2,7 +2,6 @@ package com.examples.verification.domain.service
 
 import com.examples.verification.domain.api.ConfirmVerificationCommand
 import com.examples.verification.domain.api.ConfirmVerificationResult
-import com.examples.verification.domain.model.Verification
 import com.examples.verification.domain.port.outbound.ConfirmEventVerificationPort
 import com.examples.verification.domain.service.rules.VerificationBusinessRulesService
 import com.examples.verification.domain.validation.VerificationValidationService
@@ -18,14 +17,9 @@ class ConfirmVerificationFacade(
 ) {
     fun confirm(command: ConfirmVerificationCommand): Mono<ConfirmVerificationResult> {
         return validationService.validate(command)
-            .flatMap { cmd -> businessRulesService.applyRules(cmd) }
-            .flatMap { cmd -> confirmVerificationService.confirm(cmd) }
-            .flatMap { verification -> confirmEventVerificationPort.send(verification) }
-            .map { verification -> convertToResult(verification) }
+            .flatMap(businessRulesService::applyRules)
+            .flatMap(confirmVerificationService::confirm)
+            .flatMap(confirmEventVerificationPort::send)
+            .map { ConfirmVerificationResult(true) }
     }
-
-    private fun convertToResult(verification: Verification): ConfirmVerificationResult {
-        return ConfirmVerificationResult(true)
-    }
-
 }

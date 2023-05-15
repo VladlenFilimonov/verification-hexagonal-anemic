@@ -19,7 +19,7 @@ class ConfirmVerificationService(
             .map { verification -> compareCodes(verification, cmd) }
             .map { verification -> setConfirmed(verification) }
             .flatMap { verification -> saveVerificationPort.save(verification) }
-            .switchIfEmpty(Mono.error(VerificationError("Verification not found", ErrorCode.VERIFICATION_NOT_FOUND)))
+            .switchIfEmpty(throwNotFoundError())
     }
 
     private fun compareCodes(verification: Verification, cmd: ConfirmVerificationCommand): Verification {
@@ -31,6 +31,10 @@ class ConfirmVerificationService(
 
     private fun setConfirmed(verification: Verification): Verification {
         return verification.copy(confirmed = true)
+    }
+
+    private fun throwNotFoundError(): Mono<Verification> {
+        return Mono.error(VerificationError("Verification not found", ErrorCode.VERIFICATION_NOT_FOUND))
     }
 
 }
