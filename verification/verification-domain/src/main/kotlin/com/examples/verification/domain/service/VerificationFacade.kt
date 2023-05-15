@@ -11,19 +11,19 @@ import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 
 @Service
-class VerificationService(
-    private val createVerificationService: CreateVerificationService,
-    private val confirmVerificationService: ConfirmVerificationService,
+class VerificationFacade(
+    private val createVerificationFacade: CreateVerificationFacade,
+    private val confirmVerificationFacade: ConfirmVerificationFacade,
     private val errorEventVerificationPort: ErrorEventVerificationPort
 ) : CreateVerificationUseCase, ConfirmVerificationUseCase {
 
     override fun confirm(command: ConfirmVerificationCommand): Mono<ConfirmVerificationResult> {
-        return confirmVerificationService.confirm(command)
+        return confirmVerificationFacade.confirm(command)
             .onErrorMap { error -> errorEventVerificationPort.send(error, command) }
     }
 
     override fun create(command: CreateVerificationCommand): Mono<CreateVerificationResult> {
-        return createVerificationService.create(command)
+        return createVerificationFacade.create(command)
             .onErrorMap { error -> errorEventVerificationPort.send(error, command) }
     }
 

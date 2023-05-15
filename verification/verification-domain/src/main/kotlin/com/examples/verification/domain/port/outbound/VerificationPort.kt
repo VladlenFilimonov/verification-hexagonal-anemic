@@ -21,6 +21,10 @@ interface CreateEventVerificationPort {
     fun send(verification: Verification): Mono<Verification>
 }
 
+interface ConfirmEventVerificationPort {
+    fun send(verification: Verification): Mono<Verification>
+}
+
 interface ErrorEventVerificationPort {
     fun send(error: Throwable, command: ConfirmVerificationCommand): Throwable
     fun send(error: Throwable, command: CreateVerificationCommand): Throwable

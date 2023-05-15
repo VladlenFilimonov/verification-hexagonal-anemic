@@ -1,5 +1,6 @@
 package com.examples.verification.domain.validation
 
+import com.examples.verification.domain.api.ConfirmVerificationCommand
 import com.examples.verification.domain.api.CreateVerificationCommand
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
@@ -14,10 +15,19 @@ class VerificationValidationService(
         return Mono.fromSupplier { validateCreateVerificationCommand(command) }
     }
 
-    private fun validateCreateVerificationCommand(command: CreateVerificationCommand): CreateVerificationCommand? {
+    fun validate(command: ConfirmVerificationCommand): Mono<ConfirmVerificationCommand> {
+        return Mono.fromSupplier { validateConfirmVerificationCommand(command) }
+    }
+
+    private fun validateCreateVerificationCommand(command: CreateVerificationCommand): CreateVerificationCommand {
         subjectValidator.validate(command.subject)
         userInfoValidator.validate(command.userInfo)
-        return command;
+        return command
+    }
+
+    private fun validateConfirmVerificationCommand(command: ConfirmVerificationCommand): ConfirmVerificationCommand {
+        userInfoValidator.validate(command.userInfo)
+        return command
     }
 
 }

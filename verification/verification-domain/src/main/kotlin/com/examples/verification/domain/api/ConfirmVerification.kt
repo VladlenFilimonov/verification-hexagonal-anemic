@@ -5,7 +5,7 @@ import java.util.UUID
 
 data class ConfirmVerificationCommand(
     val id: UUID,
-    val code: Long,
+    val code: String,
     val userInfo: UserInfo
 )
 
