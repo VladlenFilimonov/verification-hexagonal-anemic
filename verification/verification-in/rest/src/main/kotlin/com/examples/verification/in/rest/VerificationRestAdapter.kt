@@ -2,7 +2,6 @@ package com.examples.verification.`in`.rest
 
 import com.examples.verification.domain.api.ConfirmVerificationCommand
 import com.examples.verification.domain.api.CreateVerificationCommand
-import com.examples.verification.domain.config.ApplicationProperties
 import com.examples.verification.domain.port.inbound.ConfirmVerificationUseCase
 import com.examples.verification.domain.port.inbound.CreateVerificationUseCase
 import com.examples.verification.domain.utils.aop.Adapter
@@ -18,28 +17,33 @@ import reactor.core.publisher.Mono
 class VerificationRestAdapter(
     private val createVerificationUseCase: CreateVerificationUseCase,
     private val confirmVerificationUseCase: ConfirmVerificationUseCase,
-    private val exceptionHandler: RestExceptionHandler,
-    private val applicationProperties: ApplicationProperties,
-    private val conversionService: ConversionService
+    private val conversionService: ConversionService,
+    private val userInfoExtractor: UserInfoExtractor,
 ) {
     fun create(request: ServerRequest): Mono<ServerResponse> {
         return request.bodyToMono(CreateVerificationRequest::class.java)
+            .map { dto -> withUserInfo(dto, request) }
             .map { conversionService.convert(it, CreateVerificationCommand::class.java) }
             .flatMap(createVerificationUseCase::create)
             .map { conversionService.convert(it, CreateVerificationResponse::class.java) }
             .flatMap(::wrapToServerResponse)
-            .timeout(applicationProperties.requestTimeout)
-            .onErrorResume(exceptionHandler::handle)
     }
 
     fun confirm(request: ServerRequest): Mono<ServerResponse> {
         return request.bodyToMono(ConfirmVerificationRequest::class.java)
             .map { dto -> withVerificationId(dto, request) }
+            .map { dto -> withUserInfo(dto, request) }
             .map { conversionService.convert(it, ConfirmVerificationCommand::class.java) }
             .flatMap(confirmVerificationUseCase::confirm)
             .flatMap { ServerResponse.noContent().build() }
-            .timeout(applicationProperties.requestTimeout)
-            .onErrorResume(exceptionHandler::handle)
+    }
+
+    private fun withUserInfo(dto: ConfirmVerificationRequest, request: ServerRequest): ConfirmVerificationRequest {
+        return dto.copy(userInfo = userInfoExtractor.extract(request))
+    }
+
+    private fun withUserInfo(dto: CreateVerificationRequest, request: ServerRequest): CreateVerificationRequest {
+        return dto.copy(userInfo = userInfoExtractor.extract(request))
     }
 
     private fun withVerificationId(

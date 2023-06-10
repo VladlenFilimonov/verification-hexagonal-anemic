@@ -4,4 +4,5 @@ plugins {
 
 dependencies {
     implementation(project(":verification:verification-domain"))
+    implementation(project(":commons"))
 }

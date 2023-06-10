@@ -1,5 +1,7 @@
 package com.examples.verification.`in`.rest
 
+import com.examples.verification.domain.config.ApplicationProperties
+import com.examples.verification.`in`.rest.error.RestExceptionHandler
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.reactive.function.server.RequestPredicates.POST
@@ -12,7 +14,9 @@ import reactor.core.publisher.Mono
 
 @Configuration
 class VerificationRouterFunctions(
-    private val verificationRestAdapter: VerificationRestAdapter
+    private val verificationRestAdapter: VerificationRestAdapter,
+    private val applicationProperties: ApplicationProperties,
+    private val exceptionHandler: RestExceptionHandler
 ) {
     @Bean
     fun verifyRouter(): RouterFunction<ServerResponse> {
@@ -21,11 +25,19 @@ class VerificationRouterFunctions(
     }
 
     private fun handleCreate(): (ServerRequest) -> Mono<ServerResponse> {
-        return { request -> verificationRestAdapter.create(request) }
+        return { request ->
+            verificationRestAdapter.create(request)
+                .timeout(applicationProperties.requestTimeout)
+                .onErrorResume(exceptionHandler::handle)
+        }
     }
 
     private fun handleConfirm(): (ServerRequest) -> Mono<ServerResponse> {
-        return { request -> verificationRestAdapter.confirm(request) }
+        return { request ->
+            verificationRestAdapter.confirm(request)
+                .timeout(applicationProperties.requestTimeout)
+                .onErrorResume(exceptionHandler::handle)
+        }
     }
 }
 
