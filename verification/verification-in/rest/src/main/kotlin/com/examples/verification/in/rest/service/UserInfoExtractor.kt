@@ -1,4 +1,4 @@
-package com.examples.verification.`in`.rest
+package com.examples.verification.`in`.rest.service
 
 import com.examples.verification.`in`.rest.api.UserInfo
 import org.springframework.stereotype.Component
@@ -16,11 +16,11 @@ class UserInfoExtractor {
     private fun extractIp(request: ServerRequest): String {
         return request.remoteAddress()
             .map { it.address.hostAddress }
-            .orElse("Unknown IP")
+            .orElse("")
     }
 
     private fun extractAgent(request: ServerRequest): String {
         return request.headers()
-            .firstHeader("User-Agent") ?: "Unknown User-Agent"
+            .firstHeader("User-Agent") ?: ""
     }
 }

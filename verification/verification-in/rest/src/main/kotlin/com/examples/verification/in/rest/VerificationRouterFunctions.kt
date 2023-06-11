@@ -1,6 +1,7 @@
 package com.examples.verification.`in`.rest
 
 import com.examples.verification.domain.config.ApplicationProperties
+import com.examples.verification.`in`.rest.adapter.VerificationRestAdapter
 import com.examples.verification.`in`.rest.error.RestExceptionHandler
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

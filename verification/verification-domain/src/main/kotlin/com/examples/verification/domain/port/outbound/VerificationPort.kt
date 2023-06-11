@@ -8,13 +8,17 @@ import com.examples.verification.domain.model.VerificationAttempts
 import java.util.UUID
 import reactor.core.publisher.Mono
 
-interface SaveVerificationPort {
-    fun save(verification: Verification): Mono<Verification>
+interface CreateVerificationPort {
+    fun create(verification: Verification): Mono<Verification>
 }
 
 interface ReadVerificationPort {
     fun read(id: UUID): Mono<Verification>
-    fun read(id: Subject): Mono<Verification>
+    fun read(subject: Subject): Mono<Verification>
+}
+
+interface UpdateVerificationPort {
+    fun update(verification: Verification): Mono<Verification>
 }
 
 interface CreateEventVerificationPort {
@@ -32,6 +36,10 @@ interface ErrorEventVerificationPort {
 
 interface ReadVerificationAttemptsPort {
     fun read(verificationId: UUID): Mono<VerificationAttempts>
+}
+
+interface SaveVerificationAttemptsPort {
+    fun save(verification: Verification): Mono<Verification>
 }
 
 interface AcquireDistributedLockPort {

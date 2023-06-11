@@ -4,7 +4,7 @@ import com.examples.verification.domain.api.CreateVerificationCommand
 import com.examples.verification.domain.api.CreateVerificationResult
 import com.examples.verification.domain.model.Verification
 import com.examples.verification.domain.port.outbound.CreateEventVerificationPort
-import com.examples.verification.domain.port.outbound.SaveVerificationPort
+import com.examples.verification.domain.port.outbound.CreateVerificationPort
 import com.examples.verification.domain.service.rules.VerificationBusinessRulesService
 import com.examples.verification.domain.validation.VerificationValidationService
 import java.util.UUID
@@ -34,7 +34,7 @@ class CreateVerificationFacadeTest {
     private lateinit var verificationFactory: VerificationFactory
 
     @Mock
-    private lateinit var saveVerificationPort: SaveVerificationPort
+    private lateinit var createVerificationPort: CreateVerificationPort
 
     @Mock
     private lateinit var createEventVerificationPort: CreateEventVerificationPort
@@ -54,7 +54,7 @@ class CreateVerificationFacadeTest {
             .thenReturn(Mono.just(command))
         Mockito.`when`(verificationFactory.buildVerification(command))
             .thenReturn(Mono.just(verification))
-        Mockito.`when`(saveVerificationPort.save(verification))
+        Mockito.`when`(createVerificationPort.create(verification))
             .thenReturn(Mono.just(verification))
         Mockito.`when`(createEventVerificationPort.send(verification))
             .thenReturn(Mono.just(verification))
@@ -67,12 +67,12 @@ class CreateVerificationFacadeTest {
         verify(validationService).validate(command)
         verify(verificationBusinessRulesService).applyRules(command)
         verify(verificationFactory).buildVerification(command)
-        verify(saveVerificationPort).save(verification)
+        verify(createVerificationPort).create(verification)
         verify(createEventVerificationPort).send(verification)
 
         verifyNoMoreInteractions(
             validationService, verificationBusinessRulesService, verificationFactory,
-            saveVerificationPort, createEventVerificationPort
+            createVerificationPort, createEventVerificationPort
         )
     }
 }

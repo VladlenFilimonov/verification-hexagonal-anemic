@@ -1,4 +1,4 @@
 plugins {
-    id("webflux-conventions")
+    id("database-conventions")
     id("test-conventions")
 }

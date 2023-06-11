@@ -1,13 +1,15 @@
-package com.examples.verification.`in`.rest
+package com.examples.verification.`in`.rest.adapter
 
 import com.examples.verification.domain.api.ConfirmVerificationCommand
 import com.examples.verification.domain.api.CreateVerificationCommand
 import com.examples.verification.domain.port.inbound.ConfirmVerificationUseCase
 import com.examples.verification.domain.port.inbound.CreateVerificationUseCase
 import com.examples.verification.domain.utils.aop.Adapter
+import com.examples.verification.`in`.rest.VERIFICATION_ID_PATH_VARIABLE_NAME
 import com.examples.verification.`in`.rest.api.ConfirmVerificationRequest
 import com.examples.verification.`in`.rest.api.CreateVerificationRequest
 import com.examples.verification.`in`.rest.api.CreateVerificationResponse
+import com.examples.verification.`in`.rest.service.UserInfoExtractor
 import org.springframework.core.convert.ConversionService
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse

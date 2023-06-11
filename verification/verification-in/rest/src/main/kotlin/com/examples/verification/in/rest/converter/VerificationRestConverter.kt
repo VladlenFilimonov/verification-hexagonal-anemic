@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component
 class CreateVerificationRequestToCommand : Converter<CreateVerificationRequest, CreateVerificationCommand> {
     override fun convert(source: CreateVerificationRequest): CreateVerificationCommand {
         val subject = Subject(source.subject.identity, SubjectType.valueOf(source.subject.type))
-        val userInfo = source.userInfo ?: UserInfo("Unknown", "Unknown")
+        val userInfo = source.userInfo ?: UserInfo("", "")
         return CreateVerificationCommand(
             subject,
             com.examples.verification.domain.model.UserInfo(
@@ -39,7 +39,7 @@ class CreateVerificationResultToResponse : Converter<CreateVerificationResult, C
 class ConfirmVerificationRequestToCommand : Converter<ConfirmVerificationRequest, ConfirmVerificationCommand> {
     override fun convert(source: ConfirmVerificationRequest): ConfirmVerificationCommand {
         val verificationId = UUID.fromString(source.verificationId)
-        val userInfo = source.userInfo ?: UserInfo("Unknown", "Unknown")
+        val userInfo = source.userInfo ?: UserInfo("", "")
         return ConfirmVerificationCommand(
             verificationId,
             source.code,

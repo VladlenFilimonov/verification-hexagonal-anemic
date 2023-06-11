@@ -8,7 +8,8 @@ import com.examples.verification.domain.model.SubjectType
 import com.examples.verification.domain.model.UserInfo
 import com.examples.verification.domain.model.Verification
 import com.examples.verification.domain.port.outbound.ReadVerificationPort
-import com.examples.verification.domain.port.outbound.SaveVerificationPort
+import com.examples.verification.domain.port.outbound.SaveVerificationAttemptsPort
+import com.examples.verification.domain.port.outbound.UpdateVerificationPort
 import java.util.UUID
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -27,7 +28,10 @@ class ConfirmVerificationServiceTest {
     private lateinit var readVerificationPort: ReadVerificationPort
 
     @Mock
-    private lateinit var saveVerificationPort: SaveVerificationPort
+    private lateinit var updateVerificationPort: UpdateVerificationPort
+
+    @Mock
+    private lateinit var saveVerificationAttemptsPort: SaveVerificationAttemptsPort
 
     @InjectMocks
     private lateinit var confirmVerificationService: ConfirmVerificationService
@@ -45,7 +49,7 @@ class ConfirmVerificationServiceTest {
 
         Mockito.`when`(readVerificationPort.read(cmd.id))
             .thenReturn(Mono.just(verification))
-        Mockito.`when`(saveVerificationPort.save(expected))
+        Mockito.`when`(updateVerificationPort.update(expected))
             .thenReturn(Mono.just(expected))
 
         StepVerifier.create(confirmVerificationService.confirm(cmd))
@@ -59,6 +63,8 @@ class ConfirmVerificationServiceTest {
         val verification = Verification(VERIFICATION_ID, false, false, "5678", SUBJECT, USER_INFO)
 
         Mockito.`when`(readVerificationPort.read(cmd.id))
+            .thenReturn(Mono.just(verification))
+        Mockito.`when`(saveVerificationAttemptsPort.save(verification))
             .thenReturn(Mono.just(verification))
 
         StepVerifier.create(confirmVerificationService.confirm(cmd))

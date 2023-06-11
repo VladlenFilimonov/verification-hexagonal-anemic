@@ -5,28 +5,43 @@ import com.examples.verification.domain.error.ErrorCode
 import com.examples.verification.domain.error.VerificationError
 import com.examples.verification.domain.model.Verification
 import com.examples.verification.domain.port.outbound.ReadVerificationPort
-import com.examples.verification.domain.port.outbound.SaveVerificationPort
+import com.examples.verification.domain.port.outbound.SaveVerificationAttemptsPort
+import com.examples.verification.domain.port.outbound.UpdateVerificationPort
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 
 @Service
 class ConfirmVerificationService(
     private val readVerificationPort: ReadVerificationPort,
-    private val saveVerificationPort: SaveVerificationPort
+    private val updateVerificationPort: UpdateVerificationPort,
+    private val saveVerificationAttemptPort: SaveVerificationAttemptsPort
 ) {
     fun confirm(cmd: ConfirmVerificationCommand): Mono<Verification> {
         return readVerificationPort.read(cmd.id)
-            .map { verification -> compareCodes(verification, cmd) }
+            .flatMap { verification -> compareCodes(verification, cmd) }
             .map { verification -> setConfirmed(verification) }
-            .flatMap { verification -> saveVerificationPort.save(verification) }
+            .flatMap { verification -> updateVerificationPort.update(verification) }
             .switchIfEmpty(throwNotFoundError())
     }
 
-    private fun compareCodes(verification: Verification, cmd: ConfirmVerificationCommand): Verification {
-        if (cmd.code != verification.code) {
-            throw VerificationError("Verification code doesn't match", ErrorCode.VERIFICATION_CODE_NOT_MATCH)
-        }
-        return verification
+    private fun compareCodes(verification: Verification, cmd: ConfirmVerificationCommand): Mono<Verification> {
+        return Mono.just(verification)
+            .filter { it.code == cmd.code }
+            .switchIfEmpty(Mono.defer { processCodeComparisonError(verification) }) //Mono.defer is needed to avoid redundant Port call
+    }
+
+    private fun processCodeComparisonError(verification: Verification): Mono<Verification> {
+        return saveVerificationAttemptPort.save(verification)
+            .flatMap { _ -> throwCodeComparisonError() }
+    }
+
+    private fun throwCodeComparisonError(): Mono<Verification> {
+        return Mono.error(
+            VerificationError(
+                "Verification code doesn't match",
+                ErrorCode.VERIFICATION_CODE_NOT_MATCH
+            )
+        )
     }
 
     private fun setConfirmed(verification: Verification): Verification {
