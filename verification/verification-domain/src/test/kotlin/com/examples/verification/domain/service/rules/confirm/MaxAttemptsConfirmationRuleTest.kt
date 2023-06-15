@@ -8,7 +8,7 @@ import com.examples.verification.domain.model.UserInfo
 import com.examples.verification.domain.model.VerificationAttempt
 import com.examples.verification.domain.model.VerificationAttempts
 import com.examples.verification.domain.port.outbound.ReadVerificationAttemptsPort
-import java.time.Instant
+import java.time.OffsetDateTime
 import java.util.UUID
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -55,9 +55,9 @@ class MaxAttemptsConfirmationRuleTest {
 
         val verificationAttempts = VerificationAttempts(
             listOf(
-                VerificationAttempt(VERIFICATION_ID, Instant.MAX),
-                VerificationAttempt(VERIFICATION_ID, Instant.MAX),
-                VerificationAttempt(VERIFICATION_ID, Instant.MAX)
+                VerificationAttempt(VERIFICATION_ID, OffsetDateTime.MAX),
+                VerificationAttempt(VERIFICATION_ID, OffsetDateTime.MAX),
+                VerificationAttempt(VERIFICATION_ID, OffsetDateTime.MAX)
             )
         )
 
