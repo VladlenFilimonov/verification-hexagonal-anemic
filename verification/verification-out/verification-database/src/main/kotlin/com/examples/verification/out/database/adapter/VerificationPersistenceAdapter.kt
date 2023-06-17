@@ -21,7 +21,7 @@ class VerificationPersistenceAdapter(
     override fun create(verification: Verification): Mono<Verification> {
         return persistenceFactory.createVerificationEntity(verification)
             .flatMap(verificationRepository::save)
-            .map { _ -> verification }
+            .map { verification }
     }
 
     override fun read(id: UUID): Mono<Verification> {
@@ -38,8 +38,8 @@ class VerificationPersistenceAdapter(
 
     override fun update(verification: Verification): Mono<Verification> {
         return verificationRepository.findByVerificationId(verification.id)
-            .flatMap { entity -> persistenceFactory.updateEntity(entity, verification) }
-            .map { _ -> verification }
+            .flatMap { persistenceFactory.updateEntity(it, verification) }
+            .map { verification }
             .switchIfEmpty(throwVerificationNotFoundError())
     }
 

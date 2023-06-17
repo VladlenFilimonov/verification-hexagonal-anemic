@@ -51,7 +51,7 @@ class RestExceptionHandler {
             USER_AGENT_NOT_MATCH -> wrapBadRequest(error)
             IP_ADDRESS_NOT_MATCH -> wrapBadRequest(error)
             VERIFICATION_EXPIRED_BY_MAX_ATTEMPTS -> wrapBadRequest(error)
-            VERIFICATION_IDEMPOTENT_RULE_VIOLATION -> wrapBadRequest(error)
+            VERIFICATION_IDEMPOTENT_RULE_VIOLATION -> wrapToNoContent()
             VERIFICATION_CODE_NOT_MATCH -> wrapBadRequest(error)
             else -> wrapBadRequest(error)
         }
@@ -72,6 +72,12 @@ class RestExceptionHandler {
         return ServerResponse
             .badRequest()
             .bodyValue(RestError(error.errorCode.toString(), error.message))
+    }
+
+    private fun wrapToNoContent(): Mono<ServerResponse> {
+        return ServerResponse
+            .noContent()
+            .build()
     }
 
 }

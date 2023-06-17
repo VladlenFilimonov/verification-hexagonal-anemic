@@ -24,9 +24,9 @@ class VerificationBusinessRulesService(
 
     fun applyRules(cmd: ConfirmVerificationCommand): Mono<ConfirmVerificationCommand> {
         return idempotentConfirmationRule.apply(cmd)
-            .flatMap { command -> userInfoMatchingRule.apply(command) }
-            .flatMap { command -> verificationExpirationRule.apply(command) }
-            .flatMap { command -> maxAttemptsConfirmationRule.apply(command) }
+            .flatMap(userInfoMatchingRule::apply)
+            .flatMap(verificationExpirationRule::apply)
+            .flatMap(maxAttemptsConfirmationRule::apply)
     }
 
 }

@@ -24,7 +24,7 @@ class VerificationRedisAdapter(
         return redisTemplate
             .opsForSet()
             .members(KEY_PREFIX + verificationId.toString())
-            .map { model -> conversionService.convert(model, VerificationAttempt::class.java) }
+            .map { conversionService.convert(it, VerificationAttempt::class.java) }
             .collectList()
             .map { VerificationAttempts(it) }
     }
@@ -32,7 +32,7 @@ class VerificationRedisAdapter(
     override fun save(verification: Verification): Mono<Verification> {
         return Mono.fromSupplier { conversionService.convert(verification, VerificationAttemptRedisModel::class.java) }
             .flatMap { pushToRedis(it) }
-            .map { _ -> verification }
+            .map { verification }
     }
 
     private fun pushToRedis(verificationAttemptRedisModel: VerificationAttemptRedisModel): Mono<Boolean> {

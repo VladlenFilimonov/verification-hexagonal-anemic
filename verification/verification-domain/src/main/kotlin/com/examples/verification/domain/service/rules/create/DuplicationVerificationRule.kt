@@ -14,7 +14,7 @@ class DuplicationVerificationRule(
 ) {
     fun apply(cmd: CreateVerificationCommand): Mono<CreateVerificationCommand> {
         return readVerificationPort.read(cmd.subject)
-            .map { verification -> checkForDuplication(verification, cmd) }
+            .map { checkForDuplication(it, cmd) }
             .switchIfEmpty(Mono.just(cmd))
     }
 

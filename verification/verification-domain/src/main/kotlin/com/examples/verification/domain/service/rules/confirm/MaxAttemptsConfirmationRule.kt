@@ -17,7 +17,7 @@ class MaxAttemptsConfirmationRule(
 
     fun apply(cmd: ConfirmVerificationCommand): Mono<ConfirmVerificationCommand> {
         return readVerificationAttemptsPort.read(cmd.id)
-            .map { attempts -> checkForMaxAttempts(attempts, cmd) }
+            .map { checkForMaxAttempts(it, cmd) }
             .switchIfEmpty(Mono.error(VerificationError("Verification not found", ErrorCode.VERIFICATION_NOT_FOUND)))
     }
 

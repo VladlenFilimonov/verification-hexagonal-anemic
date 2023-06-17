@@ -18,9 +18,9 @@ class ConfirmVerificationService(
 ) {
     fun confirm(cmd: ConfirmVerificationCommand): Mono<Verification> {
         return readVerificationPort.read(cmd.id)
-            .flatMap { verification -> compareCodes(verification, cmd) }
-            .map { verification -> setConfirmed(verification) }
-            .flatMap { verification -> updateVerificationPort.update(verification) }
+            .flatMap { compareCodes(it, cmd) }
+            .map { setConfirmed(it) }
+            .flatMap { updateVerificationPort.update(it) }
             .switchIfEmpty(throwNotFoundError())
     }
 
@@ -32,7 +32,7 @@ class ConfirmVerificationService(
 
     private fun processCodeComparisonError(verification: Verification): Mono<Verification> {
         return saveVerificationAttemptPort.save(verification)
-            .flatMap { _ -> throwCodeComparisonError() }
+            .flatMap { throwCodeComparisonError() }
     }
 
     private fun throwCodeComparisonError(): Mono<Verification> {

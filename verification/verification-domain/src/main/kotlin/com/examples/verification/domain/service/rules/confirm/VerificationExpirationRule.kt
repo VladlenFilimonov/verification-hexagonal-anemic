@@ -14,7 +14,7 @@ class VerificationExpirationRule(
 ) {
     fun apply(cmd: ConfirmVerificationCommand): Mono<ConfirmVerificationCommand> {
         return readVerificationPort.read(cmd.id)
-            .map { verification -> checkForVerificationExpired(verification, cmd) }
+            .map { checkForVerificationExpired(it, cmd) }
             .switchIfEmpty(throwVerificationNotFoundError(cmd))
     }
 

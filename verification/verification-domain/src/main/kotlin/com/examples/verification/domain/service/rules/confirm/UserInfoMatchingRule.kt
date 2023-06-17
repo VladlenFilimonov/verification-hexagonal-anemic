@@ -14,7 +14,7 @@ class UserInfoMatchingRule(
 ) {
     fun apply(cmd: ConfirmVerificationCommand): Mono<ConfirmVerificationCommand> {
         return readVerificationPort.read(cmd.id)
-            .map { verification -> matchUserInfo(verification, cmd) }
+            .map { matchUserInfo(it, cmd) }
             .switchIfEmpty(Mono.error(VerificationError("Verification not found", ErrorCode.VERIFICATION_NOT_FOUND)))
     }
 

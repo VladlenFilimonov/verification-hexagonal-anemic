@@ -24,19 +24,19 @@ class VerificationRestAdapter(
 ) {
     fun create(request: ServerRequest): Mono<ServerResponse> {
         return request.bodyToMono(CreateVerificationRequest::class.java)
-            .map { dto -> withUserInfo(dto, request) }
+            .map { withUserInfo(it, request) }
             .map { conversionService.convert(it, CreateVerificationCommand::class.java) }
-            .flatMap(createVerificationUseCase::create)
+            .flatMap { createVerificationUseCase.create(it) }
             .map { conversionService.convert(it, CreateVerificationResponse::class.java) }
             .flatMap(::wrapToServerResponse)
     }
 
     fun confirm(request: ServerRequest): Mono<ServerResponse> {
         return request.bodyToMono(ConfirmVerificationRequest::class.java)
-            .map { dto -> withVerificationId(dto, request) }
-            .map { dto -> withUserInfo(dto, request) }
+            .map { withVerificationId(it, request) }
+            .map { withUserInfo(it, request) }
             .map { conversionService.convert(it, ConfirmVerificationCommand::class.java) }
-            .flatMap(confirmVerificationUseCase::confirm)
+            .flatMap { confirmVerificationUseCase.confirm(it) }
             .flatMap { ServerResponse.noContent().build() }
     }
 

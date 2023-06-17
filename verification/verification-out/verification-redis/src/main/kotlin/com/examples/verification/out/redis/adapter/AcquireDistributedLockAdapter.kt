@@ -17,7 +17,7 @@ class AcquireDistributedLockAdapter(
             .opsForValue()
             .setIfAbsent(KEY_PREFIX + cmd.id, cmd, applicationProperties.confirmVerificationLockTtl)
             .filter { it }
-            .map { _ -> cmd }
+            .map { cmd }
     }
 
     private companion object {

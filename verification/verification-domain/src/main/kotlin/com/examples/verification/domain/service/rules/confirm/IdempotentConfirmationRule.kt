@@ -15,7 +15,7 @@ class IdempotentConfirmationRule(
     fun apply(cmd: ConfirmVerificationCommand): Mono<ConfirmVerificationCommand> {
         return acquireDistributedLockPort.acquire(cmd)
             .switchIfEmpty(buildVerificationError(null))
-            .onErrorResume { error -> buildVerificationError(error) }
+            .onErrorResume { buildVerificationError(it) }
     }
 
     private fun buildVerificationError(error: Throwable?): Mono<out ConfirmVerificationCommand> {
