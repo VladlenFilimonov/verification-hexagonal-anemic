@@ -3,7 +3,7 @@ package com.examples.verification.domain.service
 import com.examples.verification.domain.api.ConfirmVerificationCommand
 import com.examples.verification.domain.api.ConfirmVerificationResult
 import com.examples.verification.domain.model.Verification
-import com.examples.verification.domain.port.outbound.ConfirmEventVerificationPort
+import com.examples.verification.domain.port.outbound.ConfirmVerificationEventPort
 import com.examples.verification.domain.service.rules.VerificationBusinessRulesService
 import com.examples.verification.domain.validation.VerificationValidationService
 import org.junit.jupiter.api.Test
@@ -26,7 +26,7 @@ class ConfirmVerificationFacadeTest {
     private lateinit var businessRulesService: VerificationBusinessRulesService
 
     @Mock
-    private lateinit var confirmEventVerificationPort: ConfirmEventVerificationPort
+    private lateinit var confirmVerificationEventPort: ConfirmVerificationEventPort
 
     @Mock
     private lateinit var confirmVerificationService: ConfirmVerificationService
@@ -47,7 +47,7 @@ class ConfirmVerificationFacadeTest {
             .thenReturn(Mono.just(command))
         Mockito.`when`(confirmVerificationService.confirm(command))
             .thenReturn(Mono.just(verification))
-        Mockito.`when`(confirmEventVerificationPort.send(verification))
+        Mockito.`when`(confirmVerificationEventPort.send(verification))
             .thenReturn(Mono.just(verification))
 
         StepVerifier.create(confirmVerificationFacade.confirm(command))
@@ -98,7 +98,7 @@ class ConfirmVerificationFacadeTest {
         Mockito.`when`(validationService.validate(command)).thenReturn(Mono.just(command))
         Mockito.`when`(businessRulesService.applyRules(command)).thenReturn(Mono.just(command))
         Mockito.`when`(confirmVerificationService.confirm(command)).thenReturn(Mono.just(verification))
-        Mockito.`when`(confirmEventVerificationPort.send(verification)).thenReturn(Mono.error(eventVerificationError))
+        Mockito.`when`(confirmVerificationEventPort.send(verification)).thenReturn(Mono.error(eventVerificationError))
 
         StepVerifier.create(confirmVerificationFacade.confirm(command))
             .expectError(eventVerificationError::class.java)

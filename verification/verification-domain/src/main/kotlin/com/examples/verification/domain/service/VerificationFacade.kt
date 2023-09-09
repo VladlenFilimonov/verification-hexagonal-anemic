@@ -6,7 +6,7 @@ import com.examples.verification.domain.api.CreateVerificationCommand
 import com.examples.verification.domain.api.CreateVerificationResult
 import com.examples.verification.domain.port.inbound.ConfirmVerificationUseCase
 import com.examples.verification.domain.port.inbound.CreateVerificationUseCase
-import com.examples.verification.domain.port.outbound.ErrorEventVerificationPort
+import com.examples.verification.domain.port.outbound.ErrorVerificationEventPort
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 
@@ -14,17 +14,17 @@ import reactor.core.publisher.Mono
 class VerificationFacade(
     private val createVerificationFacade: CreateVerificationFacade,
     private val confirmVerificationFacade: ConfirmVerificationFacade,
-    private val errorEventVerificationPort: ErrorEventVerificationPort
+    private val errorVerificationEventPort: ErrorVerificationEventPort
 ) : CreateVerificationUseCase, ConfirmVerificationUseCase {
 
     override fun confirm(command: ConfirmVerificationCommand): Mono<ConfirmVerificationResult> {
         return confirmVerificationFacade.confirm(command)
-            .onErrorMap { errorEventVerificationPort.send(it, command) }
+            .onErrorMap { errorVerificationEventPort.send(it, command) }
     }
 
     override fun create(command: CreateVerificationCommand): Mono<CreateVerificationResult> {
         return createVerificationFacade.create(command)
-            .onErrorMap { errorEventVerificationPort.send(it, command) }
+            .onErrorMap { errorVerificationEventPort.send(it, command) }
     }
 
 }

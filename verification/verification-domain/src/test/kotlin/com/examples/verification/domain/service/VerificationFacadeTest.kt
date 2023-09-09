@@ -4,7 +4,7 @@ import com.examples.verification.domain.api.ConfirmVerificationCommand
 import com.examples.verification.domain.api.ConfirmVerificationResult
 import com.examples.verification.domain.api.CreateVerificationCommand
 import com.examples.verification.domain.api.CreateVerificationResult
-import com.examples.verification.domain.port.outbound.ErrorEventVerificationPort
+import com.examples.verification.domain.port.outbound.ErrorVerificationEventPort
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -28,7 +28,7 @@ class VerificationFacadeTest {
     private lateinit var confirmVerificationFacade: ConfirmVerificationFacade
 
     @Mock
-    private lateinit var errorEventVerificationPort: ErrorEventVerificationPort
+    private lateinit var errorVerificationEventPort: ErrorVerificationEventPort
 
     @InjectMocks
     private lateinit var facade: VerificationFacade
@@ -65,9 +65,9 @@ class VerificationFacadeTest {
             .verifyError()
 
         verify(confirmVerificationFacade).confirm(command)
-        verify(errorEventVerificationPort).send(error, command)
+        verify(errorVerificationEventPort).send(error, command)
 
-        verifyNoMoreInteractions(confirmVerificationFacade, errorEventVerificationPort)
+        verifyNoMoreInteractions(confirmVerificationFacade, errorVerificationEventPort)
 
     }
 
@@ -103,9 +103,9 @@ class VerificationFacadeTest {
             .verifyError()
 
         verify(createVerificationFacade).create(command)
-        verify(errorEventVerificationPort).send(error, command)
+        verify(errorVerificationEventPort).send(error, command)
 
-        verifyNoMoreInteractions(createVerificationFacade, errorEventVerificationPort)
+        verifyNoMoreInteractions(createVerificationFacade, errorVerificationEventPort)
     }
 
 }

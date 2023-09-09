@@ -3,7 +3,7 @@ package com.examples.verification.domain.service
 import com.examples.verification.domain.api.CreateVerificationCommand
 import com.examples.verification.domain.api.CreateVerificationResult
 import com.examples.verification.domain.model.Verification
-import com.examples.verification.domain.port.outbound.CreateEventVerificationPort
+import com.examples.verification.domain.port.outbound.CreateVerificationEventPort
 import com.examples.verification.domain.port.outbound.CreateVerificationPort
 import com.examples.verification.domain.service.rules.VerificationBusinessRulesService
 import com.examples.verification.domain.validation.VerificationValidationService
@@ -37,7 +37,7 @@ class CreateVerificationFacadeTest {
     private lateinit var createVerificationPort: CreateVerificationPort
 
     @Mock
-    private lateinit var createEventVerificationPort: CreateEventVerificationPort
+    private lateinit var createVerificationEventPort: CreateVerificationEventPort
 
     @InjectMocks
     private lateinit var facade: CreateVerificationFacade
@@ -56,7 +56,7 @@ class CreateVerificationFacadeTest {
             .thenReturn(Mono.just(verification))
         Mockito.`when`(createVerificationPort.create(verification))
             .thenReturn(Mono.just(verification))
-        Mockito.`when`(createEventVerificationPort.send(verification))
+        Mockito.`when`(createVerificationEventPort.send(verification))
             .thenReturn(Mono.just(verification))
         Mockito.`when`(verification.id).thenReturn(verificationId)
 
@@ -68,11 +68,11 @@ class CreateVerificationFacadeTest {
         verify(verificationBusinessRulesService).applyRules(command)
         verify(verificationFactory).buildVerification(command)
         verify(createVerificationPort).create(verification)
-        verify(createEventVerificationPort).send(verification)
+        verify(createVerificationEventPort).send(verification)
 
         verifyNoMoreInteractions(
             validationService, verificationBusinessRulesService, verificationFactory,
-            createVerificationPort, createEventVerificationPort
+            createVerificationPort, createVerificationEventPort
         )
     }
 }

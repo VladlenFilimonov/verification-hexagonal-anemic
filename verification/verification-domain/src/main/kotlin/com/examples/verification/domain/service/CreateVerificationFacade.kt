@@ -2,7 +2,7 @@ package com.examples.verification.domain.service
 
 import com.examples.verification.domain.api.CreateVerificationCommand
 import com.examples.verification.domain.api.CreateVerificationResult
-import com.examples.verification.domain.port.outbound.CreateEventVerificationPort
+import com.examples.verification.domain.port.outbound.CreateVerificationEventPort
 import com.examples.verification.domain.port.outbound.CreateVerificationPort
 import com.examples.verification.domain.service.rules.VerificationBusinessRulesService
 import com.examples.verification.domain.validation.VerificationValidationService
@@ -15,14 +15,14 @@ class CreateVerificationFacade(
     private val verificationBusinessRulesService: VerificationBusinessRulesService,
     private val verificationFactory: VerificationFactory,
     private val createVerificationPort: CreateVerificationPort,
-    private val createEventVerificationPort: CreateEventVerificationPort
+    private val createVerificationEventPort: CreateVerificationEventPort
 ) {
     fun create(command: CreateVerificationCommand): Mono<CreateVerificationResult> {
         return validationService.validate(command)
             .flatMap(verificationBusinessRulesService::applyRules)
             .flatMap(verificationFactory::buildVerification)
             .flatMap(createVerificationPort::create)
-            .flatMap(createEventVerificationPort::send)
+            .flatMap(createVerificationEventPort::send)
             .map { CreateVerificationResult(it.id) }
     }
 }
