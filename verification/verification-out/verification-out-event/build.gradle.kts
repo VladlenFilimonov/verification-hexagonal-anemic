@@ -1,5 +1,5 @@
 plugins {
-    id("webflux-conventions")
+    id("kafka-conventions")
 }
 
 dependencies {

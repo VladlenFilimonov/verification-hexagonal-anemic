@@ -1,5 +1,5 @@
 plugins {
-    id("database-conventions")
+    id("postgres-conventions")
 }
 
 dependencies {
