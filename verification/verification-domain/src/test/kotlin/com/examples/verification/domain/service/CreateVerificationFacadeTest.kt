@@ -56,7 +56,7 @@ class CreateVerificationFacadeTest {
             .thenReturn(Mono.just(verification))
         Mockito.`when`(createVerificationPort.create(verification))
             .thenReturn(Mono.just(verification))
-        Mockito.`when`(createVerificationEventPort.send(verification))
+        Mockito.`when`(createVerificationEventPort.sendCreate(verification))
             .thenReturn(Mono.just(verification))
         Mockito.`when`(verification.id).thenReturn(verificationId)
 
@@ -68,7 +68,7 @@ class CreateVerificationFacadeTest {
         verify(verificationBusinessRulesService).applyRules(command)
         verify(verificationFactory).buildVerification(command)
         verify(createVerificationPort).create(verification)
-        verify(createVerificationEventPort).send(verification)
+        verify(createVerificationEventPort).sendCreate(verification)
 
         verifyNoMoreInteractions(
             validationService, verificationBusinessRulesService, verificationFactory,

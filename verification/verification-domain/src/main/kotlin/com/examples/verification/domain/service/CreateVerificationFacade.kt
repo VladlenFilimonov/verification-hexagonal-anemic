@@ -22,7 +22,7 @@ class CreateVerificationFacade(
             .flatMap(verificationBusinessRulesService::applyRules)
             .flatMap(verificationFactory::buildVerification)
             .flatMap(createVerificationPort::create)
-            .flatMap(createVerificationEventPort::send)
+            .flatMap(createVerificationEventPort::sendCreate)
             .map { CreateVerificationResult(it.id) }
     }
 }

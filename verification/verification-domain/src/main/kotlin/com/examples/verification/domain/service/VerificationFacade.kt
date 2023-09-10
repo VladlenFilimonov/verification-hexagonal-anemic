@@ -19,12 +19,12 @@ class VerificationFacade(
 
     override fun confirm(command: ConfirmVerificationCommand): Mono<ConfirmVerificationResult> {
         return confirmVerificationFacade.confirm(command)
-            .onErrorMap { errorVerificationEventPort.send(it, command) }
+            .onErrorMap { errorVerificationEventPort.sendError(it, command) }
     }
 
     override fun create(command: CreateVerificationCommand): Mono<CreateVerificationResult> {
         return createVerificationFacade.create(command)
-            .onErrorMap { errorVerificationEventPort.send(it, command) }
+            .onErrorMap { errorVerificationEventPort.sendError(it, command) }
     }
 
 }

@@ -65,7 +65,7 @@ class VerificationFacadeTest {
             .verifyError()
 
         verify(confirmVerificationFacade).confirm(command)
-        verify(errorVerificationEventPort).send(error, command)
+        verify(errorVerificationEventPort).sendError(error, command)
 
         verifyNoMoreInteractions(confirmVerificationFacade, errorVerificationEventPort)
 
@@ -103,7 +103,7 @@ class VerificationFacadeTest {
             .verifyError()
 
         verify(createVerificationFacade).create(command)
-        verify(errorVerificationEventPort).send(error, command)
+        verify(errorVerificationEventPort).sendError(error, command)
 
         verifyNoMoreInteractions(createVerificationFacade, errorVerificationEventPort)
     }

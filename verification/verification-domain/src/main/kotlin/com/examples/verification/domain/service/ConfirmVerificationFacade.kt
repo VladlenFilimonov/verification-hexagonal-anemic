@@ -19,7 +19,7 @@ class ConfirmVerificationFacade(
         return validationService.validate(command)
             .flatMap(businessRulesService::applyRules)
             .flatMap(confirmVerificationService::confirm)
-            .flatMap(confirmVerificationEventPort::send)
+            .flatMap(confirmVerificationEventPort::sendConfirm)
             .map { ConfirmVerificationResult(true) }
     }
 }

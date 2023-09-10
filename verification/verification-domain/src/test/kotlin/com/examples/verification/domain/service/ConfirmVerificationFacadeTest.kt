@@ -47,7 +47,7 @@ class ConfirmVerificationFacadeTest {
             .thenReturn(Mono.just(command))
         Mockito.`when`(confirmVerificationService.confirm(command))
             .thenReturn(Mono.just(verification))
-        Mockito.`when`(confirmVerificationEventPort.send(verification))
+        Mockito.`when`(confirmVerificationEventPort.sendConfirm(verification))
             .thenReturn(Mono.just(verification))
 
         StepVerifier.create(confirmVerificationFacade.confirm(command))
@@ -98,7 +98,8 @@ class ConfirmVerificationFacadeTest {
         Mockito.`when`(validationService.validate(command)).thenReturn(Mono.just(command))
         Mockito.`when`(businessRulesService.applyRules(command)).thenReturn(Mono.just(command))
         Mockito.`when`(confirmVerificationService.confirm(command)).thenReturn(Mono.just(verification))
-        Mockito.`when`(confirmVerificationEventPort.send(verification)).thenReturn(Mono.error(eventVerificationError))
+        Mockito.`when`(confirmVerificationEventPort.sendConfirm(verification))
+            .thenReturn(Mono.error(eventVerificationError))
 
         StepVerifier.create(confirmVerificationFacade.confirm(command))
             .expectError(eventVerificationError::class.java)
