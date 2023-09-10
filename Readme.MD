@@ -1,7 +1,7 @@
 # Project Overview
 
-This project is developed for educational purposes and serves as a part of my portfolio. The primary goal of this
-project is to gain experience with various approaches and technologies.
+This project is being developed for educational purposes and is serving as a part of my portfolio.
+The primary goal of this project is to gain experience with various approaches and technologies.
 
 ## Technologies and Approaches
 
@@ -25,6 +25,8 @@ project is to gain experience with various approaches and technologies.
 - Clean architecture
 - Hexagonal architecture
 - Anemic domain model
+- Microservices
+- Event Driven
 
 ### Integration:
 
