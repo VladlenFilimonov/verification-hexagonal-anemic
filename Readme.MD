@@ -35,6 +35,29 @@ The primary goal of this project is to gain experience with various approaches a
 - Apache Redis
 - Postgres
 
+### Testing:
+
+- Reactor StepVerifier
+- Spring Boot Test
+
+#### Unit tests:
+
+- JUnit Platform Jupiter
+- Mockito
+
+#### Integration tests:
+
+- Kotlin Platform
+- Gradle Test Suites
+- Kotest
+- Testcontainers
+
+To run integration tests, you can use the command .\gradlew itest
+
+#### E2E tests:
+
+- TBD
+
 ### Application architecture diagrams
 
 #### Verification module architecture:

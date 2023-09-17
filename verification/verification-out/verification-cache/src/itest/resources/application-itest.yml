@@ -1,0 +1,13 @@
+verification:
+  verificationTtl: "5m"
+  verificationMaxAttempts: 5
+  verificationCodeLength: 8
+  requestTimeout: "10s"
+  verificationAttemptsTtl: "2d"
+  confirmVerificationLockTtl: "15s"
+
+spring:
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379

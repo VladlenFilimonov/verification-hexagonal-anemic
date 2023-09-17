@@ -1,8 +1,9 @@
 package com.examples.verification.domain.config
 
 import java.time.Duration
+import org.springframework.boot.context.properties.ConfigurationProperties
 
-
+@ConfigurationProperties(prefix = "verification")
 class ApplicationProperties(
     val verificationTtl: Duration,
     val verificationMaxAttempts: Int,
@@ -10,13 +11,4 @@ class ApplicationProperties(
     val requestTimeout: Duration,
     val verificationAttemptsTtl: Duration,
     val confirmVerificationLockTtl: Duration
-) {
-    constructor() : this(
-        Duration.parse("PT5M"),
-        5,
-        8,
-        Duration.parse("PT10S"),
-        Duration.parse("P2D"),
-        Duration.parse("PT15S")
-    )
-}
+)

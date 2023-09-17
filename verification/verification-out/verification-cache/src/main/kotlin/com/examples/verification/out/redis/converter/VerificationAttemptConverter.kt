@@ -3,7 +3,8 @@ package com.examples.verification.out.redis.converter
 import com.examples.verification.domain.model.Verification
 import com.examples.verification.domain.model.VerificationAttempt
 import com.examples.verification.out.redis.model.VerificationAttemptRedisModel
-import java.time.OffsetDateTime
+import java.time.Instant
+import java.time.ZoneOffset
 import java.util.UUID
 import org.springframework.core.convert.converter.Converter
 import org.springframework.stereotype.Component
@@ -14,7 +15,7 @@ class VerificationAttemptToModelConverter : Converter<Verification, Verification
         return VerificationAttemptRedisModel(
             id = UUID.randomUUID().toString(),
             verificationId = source.id ?: throw IllegalArgumentException("No verification id found"),
-            createdAt = OffsetDateTime.now()
+            createdAt = Instant.now().atOffset(ZoneOffset.UTC)
         )
     }
 }

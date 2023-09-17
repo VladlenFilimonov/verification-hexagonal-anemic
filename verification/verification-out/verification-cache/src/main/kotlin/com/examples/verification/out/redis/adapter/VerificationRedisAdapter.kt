@@ -38,10 +38,10 @@ class VerificationRedisAdapter(
     private fun pushToRedis(verificationAttemptRedisModel: VerificationAttemptRedisModel): Mono<Boolean> {
         return redisTemplate
             .opsForSet()
-            .add(KEY_PREFIX + verificationAttemptRedisModel.id, verificationAttemptRedisModel)
+            .add(KEY_PREFIX + verificationAttemptRedisModel.verificationId, verificationAttemptRedisModel)
             .then(
                 redisTemplate.expire(
-                    KEY_PREFIX + verificationAttemptRedisModel.id,
+                    KEY_PREFIX + verificationAttemptRedisModel.verificationId,
                     applicationProperties.verificationAttemptsTtl
                 )
             )
